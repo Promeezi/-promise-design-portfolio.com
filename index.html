@@ -414,31 +414,18 @@
                     </div>
                     <div class="md:w-1/2 p-10">
                         <h3 class="text-2xl font-semibold text-gray-800 mb-6">Send Me a Message</h3>
-                    <form id="contactForm" action="https://formsubmit.co/abalekepromise1@gmail.com" method="POST">
-    <!-- Hidden inputs -->
-    <input type="hidden" name="_captcha" value="false">
-    <input type="hidden" name="_redirect" value="">
-    <input type="hidden" name="_next" value="#thankYouMessage">
-
-    <div class="mb-6">
-        <label for="name" class="block text-gray-700 mb-2">Your Name</label>
-        <input type="text" id="name" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-    </div>
-    <div class="mb-6">
-        <label for="email" class="block text-gray-700 mb-2">Your Email</label>
-        <input type="email" id="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-    </div>
-    <div class="mb-6">
-        <label for="subject" class="block text-gray-700 mb-2">Subject</label>
-        <input type="text" id="subject" name="subject" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-    </div>
-    <div class="mb-6">
-        <label for="message" class="block text-gray-700 mb-2">Message</label>
-        <textarea id="message" name="message" rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"></textarea>
-    </div>
-    <button type="submit" class="w-full gradient-bg text-white py-3 rounded-lg font-semibold hover:opacity-90 transition duration-300">Send Message</button>
+                    <form id="gform" onsubmit="submitForm(event)" class="space-y-4">
+  <input type="text" name="name" placeholder="Your Name" required class="w-full px-4 py-2 border rounded">
+  <input type="email" name="email" placeholder="Your Email" required class="w-full px-4 py-2 border rounded">
+  <input type="text" name="subject" placeholder="Subject" class="w-full px-4 py-2 border rounded">
+  <textarea name="message" placeholder="Message" rows="4" required class="w-full px-4 py-2 border rounded"></textarea>
+  <button type="submit" class="bg-primary-600 text-white py-2 px-6 rounded hover:bg-primary-700 transition">Send Message</button>
 </form>
 
+<!-- Popup -->
+<div id="successPopup" class="hidden fixed bottom-6 right-6 bg-green-600 text-white px-6 py-3 rounded-lg shadow-xl z-50">
+  ✅ Thank you! We got your message.
+</div>
 <!-- ✅ Add this below your form: Thank You Message -->
 <div id="thankYouMessage" class="hidden text-green-600 font-semibold mt-4">
     ✅ Thank you for reaching out! Your message has been sent successfully.
@@ -534,5 +521,35 @@
     });
   });
 </script>
+    <script>
+function submitForm(e) {
+  e.preventDefault();
+
+  const form = document.getElementById("gform");
+  const data = new FormData();
+
+  // Your real Google Form entry IDs:
+  data.append("entry.1490193765", form.name.value);
+  data.append("entry.1302305672", form.email.value);
+  data.append("entry.1081453856", form.subject.value);
+  data.append("entry.707810993", form.message.value);
+
+  fetch("https://docs.google.com/forms/d/e/1FAIpQLSeVsnHkmRkK6uvz7O2DuP8yoJSKzeSofcgCWSAvt-9YHbLtzA/formResponse", {
+    method: "POST",
+    mode: "no-cors",
+    body: data
+  });
+
+  // Show success popup
+  const popup = document.getElementById("successPopup");
+  popup.classList.remove("hidden");
+
+  // Reset form
+  form.reset();
+
+  // Hide popup after 4s
+  setTimeout(() => popup.classList.add("hidden"), 4000);
+}
+    </script>
 </body>
 </html>
