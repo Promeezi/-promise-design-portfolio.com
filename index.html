@@ -519,7 +519,7 @@
     const formData = new FormData(form);
 
     fetch(form.action, {
-      method: "POST",
+      method="POST",
       body: formData,
       headers: { 'Accept': 'application/json' }
     }).then(response => {
